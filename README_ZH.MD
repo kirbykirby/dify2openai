@@ -31,7 +31,7 @@ uv run main.py
 
 ## 使用方法
 启动服务后，你可以向 API 接口发送请求。以下是 Python 示例代码：
-localhost:3000/v1/chat/completions
+
 ```python
 import requests
 
