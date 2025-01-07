@@ -1,5 +1,5 @@
 import time
-from fastapi import FastAPI, Request, HTTPException
+from fastapi import FastAPI, HTTPException
 from fastapi.responses import StreamingResponse
 import os
 import requests
