@@ -5,10 +5,19 @@ import os
 import requests
 import json
 import uvicorn
-from config import DIFY_API_URL, BOT_TYPE, INPUT_VARIABLE, OUTPUT_VARIABLE, API_PATHS
+from starlette.requests import Request
+from config import DIFY_API_URL, BOT_TYPE, INPUT_VARIABLE, OUTPUT_VARIABLE, API_PATHS, CORS_HEADERS
 from utils import generate_id, validate_auth_token
 
 app = FastAPI()
+
+
+@app.middleware("http")
+async def set_cors_headers(request: Request, call_next):
+    response = await call_next(request)
+    for key, value in CORS_HEADERS.items():
+        response.headers[key] = value
+    return response
 
 
 @app.get("/")
