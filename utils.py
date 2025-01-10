@@ -1,6 +1,7 @@
 import random
 import string
-from fastapi import HTTPException, Request
+from fastapi import HTTPException, Request, FastAPI
+from config import CORS_HEADERS
 
 
 def generate_id(length=29):
@@ -21,3 +22,12 @@ def validate_auth_token(request: Request) -> str:
         raise HTTPException(status_code=401, detail="Unauthorized.")
 
     return token
+
+
+def setup_middleware(app: FastAPI):
+    @app.middleware("http")
+    async def set_cors_headers(request: Request, call_next):
+        response = await call_next(request)
+        for key, value in CORS_HEADERS.items():
+            response.headers[key] = value
+        return response
