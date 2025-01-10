@@ -2,12 +2,11 @@ import time
 import traceback
 from fastapi import FastAPI, HTTPException, Request
 from fastapi.responses import StreamingResponse
-import os
 import requests
 import uvicorn
-from config import DIFY_API_URL, BOT_TYPE, INPUT_VARIABLE, API_PATHS, CORS_HEADERS
+from config import DIFY_API_URL, BOT_TYPE, API_PATHS, CORS_HEADERS
 from models import ChatResponse, Choice, Message, Usage, ChatRequest
-from request_builder import build_completion_request, build_chat_request
+from request_builder import build_request
 from stream_processor import StreamProcessor
 from utils import generate_id, validate_auth_token
 
@@ -33,7 +32,7 @@ async def get_models():
         "object": "list",
         "data": [
             {
-                "id": os.getenv("MODELS_NAME", "dify"),
+                "id": "dify",
                 "object": "model",
                 "owned_by": "dify",
                 "permission": None,
@@ -48,16 +47,14 @@ async def post_chat_completions(request: Request):
         token = validate_auth_token(request)
         data = await request.json()
         request_data = ChatRequest(**data)
-        request_body = (
-            build_chat_request(
-                request_data.messages, INPUT_VARIABLE, request_data.user_id, request_data.conversation_id
-            )
-            if BOT_TYPE == "Chat"
-            else build_completion_request(request_data.messages, INPUT_VARIABLE)
+        request_body = build_request(
+            request_data.messages,
+            request_data.user_id,
+            request_data.conversation_id,
         )
 
         resp = requests.post(
-            DIFY_API_URL + API_PATHS[BOT_TYPE],
+            DIFY_API_URL + API_PATHS[BOT_TYPE.lower()],
             headers={
                 "Content-Type": "application/json",
                 "Authorization": f"Bearer {token}",
@@ -94,7 +91,7 @@ async def post_chat_completions(request: Request):
             conversation_id=processor.conversation_id,
             dialogue_count=processor.dialogue_count,
         )
-    except Exception as e:
+    except Exception:
         print(f"traceback: {traceback.format_exc()}")
         raise HTTPException(status_code=500, detail="Internal server error")
 

@@ -7,12 +7,11 @@ DIFY_API_URL = os.getenv("DIFY_API_URL")
 if not DIFY_API_URL:
     raise ValueError("You need a DIFY API URL, dude.")
 BOT_TYPE = os.getenv("BOT_TYPE", "Chat")
-INPUT_VARIABLE = os.getenv("INPUT_VARIABLE")
 OUTPUT_VARIABLE = os.getenv("OUTPUT_VARIABLE", "")
 API_PATHS = {
-    "Chat": "/chat-messages",
-    "Completion": "/completion-messages",
-    "Workflow": "/workflows/run",
+    "chat": "/chat-messages",
+    "completion": "/completion-messages",
+    "workflow": "/workflows/run",
 }
 CORS_HEADERS = {
     "Access-Control-Allow-Origin": "*",
