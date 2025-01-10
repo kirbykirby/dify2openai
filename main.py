@@ -48,10 +48,9 @@ async def post_chat_completions(request: Request):
         token = validate_auth_token(request)
         data = await request.json()
         request_data = ChatRequest(**data)
-
         request_body = (
             build_chat_request(
-                request_data.messages, INPUT_VARIABLE, request_data.user_id
+                request_data.messages, INPUT_VARIABLE, request_data.user_id, request_data.conversation_id
             )
             if BOT_TYPE == "Chat"
             else build_completion_request(request_data.messages, INPUT_VARIABLE)
@@ -74,16 +73,13 @@ async def post_chat_completions(request: Request):
         processor = StreamProcessor()
         for chunk in resp.iter_content(chunk_size=1024):
             processor.process_chunk(chunk)
-
             if processor.has_error:
                 raise HTTPException(
                     status_code=500,
                     detail="An error occurred while processing the request.",
                 )
-
         if not processor.message_ended:
             raise HTTPException(status_code=500, detail="Unexpected end of stream.")
-
         return ChatResponse(
             id=f"chatcmpl-{generate_id()}",
             created=int(time.time()),
@@ -95,6 +91,8 @@ async def post_chat_completions(request: Request):
                 )
             ],
             usage=Usage(**processor.usage_data),
+            conversation_id=processor.conversation_id,
+            dialogue_count=processor.dialogue_count,
         )
     except Exception as e:
         print(f"traceback: {traceback.format_exc()}")

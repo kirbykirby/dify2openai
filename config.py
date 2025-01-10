@@ -7,7 +7,7 @@ DIFY_API_URL = os.getenv("DIFY_API_URL")
 if not DIFY_API_URL:
     raise ValueError("You need a DIFY API URL, dude.")
 BOT_TYPE = os.getenv("BOT_TYPE", "Chat")
-INPUT_VARIABLE = os.getenv("INPUT_VARIABLE", "")
+INPUT_VARIABLE = os.getenv("INPUT_VARIABLE")
 OUTPUT_VARIABLE = os.getenv("OUTPUT_VARIABLE", "")
 API_PATHS = {
     "Chat": "/chat-messages",
