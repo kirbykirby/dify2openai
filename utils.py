@@ -1,6 +1,6 @@
 import random
 import string
-from fastapi import HTTPException
+from fastapi import HTTPException, Request
 
 
 def generate_id(length=29):
@@ -8,8 +8,11 @@ def generate_id(length=29):
     return "".join(random.choice(characters) for _ in range(length))
 
 
-def validate_auth_token(auth_header: str | None) -> str:
+def validate_auth_token(request: Request) -> str:
     """验证认证token"""
+    auth_header = request.headers.get("authorization") or request.headers.get(
+        "Authorization"
+    )
     if not auth_header:
         raise HTTPException(status_code=401, detail="Unauthorized.")
 

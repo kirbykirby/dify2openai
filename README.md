@@ -84,6 +84,7 @@ The response format will match OpenAI's API response structure:
                 "role": "assistant",
                 "content": "Hello! How can I help you today?"
             },
+            "logprobs": null,
             "finish_reason": "stop"
         }
     ],
@@ -91,7 +92,8 @@ The response format will match OpenAI's API response structure:
         "prompt_tokens": 10,
         "completion_tokens": 20,
         "total_tokens": 30
-    }
+    },
+    "system_fingerprint": "fp_2f57f81c11"
 }
 ```
 
