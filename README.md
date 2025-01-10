@@ -93,7 +93,9 @@ The response format will match OpenAI's API response structure:
         "completion_tokens": 20,
         "total_tokens": 30
     },
-    "system_fingerprint": "fp_2f57f81c11"
+    "system_fingerprint": "fp_2f57f81c11",
+    "conversation_id": "e07755fe-0c42-42df-a84c-c6f17bd0d8da",
+    "dialogue_count": 0
 }
 ```
 
